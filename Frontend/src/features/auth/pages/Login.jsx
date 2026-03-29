@@ -13,8 +13,13 @@ const Login = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault()
-        await handleLogin({email,password})
-        navigate('/')
+        const success = await handleLogin({email,password})
+        if (success) {
+            navigate('/')
+        } else {
+            console.error("Login failed")
+            // Optionally, we could show an alert or set an error state here.
+        }
     }
 
     if(loading){
