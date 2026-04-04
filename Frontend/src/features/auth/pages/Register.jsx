@@ -13,13 +13,8 @@ const Register = () => {
     
     const handleSubmit = async (e) => {
         e.preventDefault()
-        const success = await handleRegister({username,email,password})
-        if (success) {
-            navigate("/")
-        } else {
-            console.error("Registration failed")
-            // Optionally, we could show an alert or set an error state here.
-        }
+        await handleRegister({username,email,password})
+        navigate("/")
     }
 
     if(loading){

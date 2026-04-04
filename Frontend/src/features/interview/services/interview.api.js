@@ -5,6 +5,16 @@ const api = axios.create({
     withCredentials: true,
 })
 
+// Interceptor to log errors
+api.interceptors.response.use(
+  res => res,
+  err => {
+    console.log("Status:", err.response?.status)
+    console.log("Response body:", err.response?.data)
+    return Promise.reject(err)
+  }
+)
+
 
 /**
  * @description Service to generate interview report based on user self description, resume and job description.

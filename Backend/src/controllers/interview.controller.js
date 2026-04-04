@@ -1,36 +1,57 @@
-const pdfParse = require("pdf-parse")
+const pdfjsLib = require("pdfjs-dist/legacy/build/pdf.js")
 const { generateInterviewReport, generateResumePdf } = require("../services/ai.service")
 const interviewReportModel = require("../models/interviewReport.model")
 
+pdfjsLib.GlobalWorkerOptions.workerSrc = ""
 
-
+async function extractTextFromPdf(buffer) {
+    const uint8Array = new Uint8Array(buffer)
+    const pdf = await pdfjsLib.getDocument({ data: uint8Array }).promise
+    let text = ""
+    for (let i = 1; i <= pdf.numPages; i++) {
+        const page = await pdf.getPage(i)
+        const content = await page.getTextContent()
+        text += content.items.map(item => item.str).join(" ") + "\n"
+    }
+    return text
+}
 
 /**
  * @description Controller to generate interview report based on user self description, resume and job description.
  */
 async function generateInterViewReportController(req, res) {
 
-    const resumeContent = await (new pdfParse.PDFParse(Uint8Array.from(req.file.buffer))).getText()
-    const { selfDescription, jobDescription } = req.body
+    let resumeText = "";
+    if (req.file && req.file.buffer) {
+        resumeText = await extractTextFromPdf(req.file.buffer)
+    }
+
+    const { selfDescription = "", jobDescription = "" } = req.body;
+
+    if (!resumeText && !selfDescription) {
+        return res.status(400).json({
+            message: "Either a resume or a self description is required."
+        });
+    }
 
     const interViewReportByAi = await generateInterviewReport({
-        resume: resumeContent.text,
+        resume: resumeText,
         selfDescription,
         jobDescription
-    })
+    });
 
     const interviewReport = await interviewReportModel.create({
         user: req.user.id,
-        resume: resumeContent.text,
+        resume: resumeText,
         selfDescription,
         jobDescription,
         ...interViewReportByAi
-    })
+    });
 
     res.status(201).json({
         message: "Interview report generated successfully.",
         interviewReport
-    })
+    });
 
 }
 

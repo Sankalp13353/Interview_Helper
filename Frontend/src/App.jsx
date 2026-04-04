@@ -7,9 +7,9 @@ function App() {
 
   return (
     <AuthProvider>
-        <InterviewProvider>
-            <RouterProvider router={router} />
-        </InterviewProvider>
+      <InterviewProvider>
+        <RouterProvider router={router} />
+      </InterviewProvider>
     </AuthProvider>
   )
 }
