@@ -7,8 +7,7 @@ const app = express()
 app.use(express.json())
 app.use(cookieParser())
 const allowedOrigins = [
-    process.env.CLIENT_URL || "http://localhost:5173",
-    "https://interview-helper-lake.vercel.app"
+    process.env.CLIENT_URL || "http://localhost:5173"
 ]
 
 app.use(cors({
@@ -30,7 +29,5 @@ const interviewRouter = require("./routes/interview.routes")
 /* using all the routes here */
 app.use("/api/auth", authRouter)
 app.use("/api/interview", interviewRouter)
-
-
 
 module.exports = app
