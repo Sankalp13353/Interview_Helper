@@ -25,9 +25,37 @@ app.use(cors({
 const authRouter = require("./routes/auth.routes")
 const interviewRouter = require("./routes/interview.routes")
 
-
 /* using all the routes here */
 app.use("/api/auth", authRouter)
 app.use("/api/interview", interviewRouter)
+
+app.get("/", (req, res) => {
+    res.send("Backend is Running !!!")
+})
+
+app.get("/health", (req, res) => {
+    res.status(200).json({
+        status: "success",
+        backend: "healthy",
+        timestamp: new Date().toISOString()
+    });
+})
+
+app.get("/health/db", (req, res) => {
+    const mongoose = require("mongoose");
+    const dbState = mongoose.connection.readyState;
+    const statusText = {
+        0: "disconnected",
+        1: "connected",
+        2: "connecting",
+        3: "disconnecting"
+    };
+
+    res.status(200).json({
+        status: "success",
+        database: statusText[dbState] || "unknown",
+        timestamp: new Date().toISOString()
+    });
+})
 
 module.exports = app
