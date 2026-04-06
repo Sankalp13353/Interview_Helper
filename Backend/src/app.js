@@ -58,4 +58,12 @@ app.get("/health/db", (req, res) => {
     });
 })
 
+// Global Error Handler Middleware
+app.use((err, req, res, next) => {
+    console.error("Unhandled Exception:", err.stack);
+    const status = err.statusCode || 500;
+    const message = err.message || "Internal Server Error";
+    res.status(status).json({ message });
+});
+
 module.exports = app

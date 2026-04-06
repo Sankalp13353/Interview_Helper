@@ -16,7 +16,7 @@ export const AuthProvider = ({ children }) => {
                     setUser(data.user)
                 }
             } catch (err) {
-                console.error("Auth check failed:", err)
+                // Silently handle expected auth rejection (Guest state)
             } finally {
                 setLoading(false)
             }
@@ -30,14 +30,10 @@ export const AuthProvider = ({ children }) => {
         setError(null)
         try {
             const data = await login(credentials)
-            if (!data?.user) {
-                setError('Login failed. Please check your credentials.')
-                return false
-            }
             setUser(data.user)
             return true
         } catch (err) {
-            setError('Login failed. Please check your credentials.')
+            setError(err.message || 'Login failed. Please check your credentials.')
             return false
         } finally {
             setLoading(false)
@@ -49,14 +45,10 @@ export const AuthProvider = ({ children }) => {
         setError(null)
         try {
             const data = await register(credentials)
-            if (!data?.user) {
-                setError('Registration failed. Please try again.')
-                return false
-            }
             setUser(data.user)
             return true
         } catch (err) {
-            setError('Registration failed. Please try again.')
+            setError(err.message || 'Registration failed. Please try again.')
             return false
         } finally {
             setLoading(false)

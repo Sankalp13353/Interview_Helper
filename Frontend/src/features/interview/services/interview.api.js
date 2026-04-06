@@ -51,9 +51,11 @@ export const getInterviewReportById = async (interviewId) => {
  * @description Service to get all interview reports of logged in user.
  */
 export const getAllInterviewReports = async () => {
-    const response = await api.get("/api/interview/")
-
-    return response.data
+    const response = await api.get("/api/interview/", {
+        validateStatus: status => (status >= 200 && status < 300) || status === 401
+    });
+    if (response.status === 401) return { interviewReports: [] };
+    return response.data;
 }
 
 
