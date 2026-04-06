@@ -1,5 +1,5 @@
 import React,{useState} from 'react'
-import { useNavigate, Link } from 'react-router-dom'
+import { useNavigate, Link, Navigate } from 'react-router-dom'
 import { useAuth } from '../hooks/useAuth'
 
 const Register = () => {
@@ -8,22 +8,23 @@ const Register = () => {
     const [ username, setUsername ] = useState("")
     const [ email, setEmail ] = useState("")
     const [ password, setPassword ] = useState("")
-    const [ error, setError ] = useState("")
 
-    const {loading,handleRegister} = useAuth()
+    const { user, loading, error, handleRegister} = useAuth()
     
     const handleSubmit = async (e) => {
         e.preventDefault()
         const success = await handleRegister({username,email,password})
         if (success) {
             navigate("/")
-        } else {
-            setError('Registration failed. Please try again.')
         }
     }
 
     if(loading){
         return (<main><h1>Loading.......</h1></main>)
+    }
+
+    if (user) {
+        return <Navigate to="/" />
     }
 
     return (
