@@ -34,6 +34,35 @@ main{
             padding-inline: 1rem;
             padding-block: 0.75rem;
             border-radius: 0.75rem;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .password-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+
+            input {
+                padding-right: 2.5rem;
+            }
+
+            button {
+                position: absolute;
+                right: 0.75rem;
+                background: none;
+                border: none;
+                cursor: pointer;
+                padding: 0;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: #7d8590;
+
+                &:hover {
+                    color: #1e2535; /* Darkish hover depending on background or leave it default inherited */
+                }
+            }
         }
     }
 
